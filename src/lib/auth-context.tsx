@@ -43,15 +43,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     const data = await apiLogin(email, password)
     localStorage.setItem('access_token', data.access_token)
-    localStorage.setItem('refresh_token', data.refresh_token)
-    setUser(data.user)
+    if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token)
+    const me = await apiMe()
+    setUser(me)
+    window.location.href = '/dashboard'
   }
 
   const register = async (email: string, password: string, full_name: string) => {
-    const data = await apiRegister(email, password, full_name)
-    localStorage.setItem('access_token', data.access_token)
-    localStorage.setItem('refresh_token', data.refresh_token)
-    setUser(data.user)
+    await apiRegister(email, password, full_name)
+    const tokens = await apiLogin(email, password)
+    localStorage.setItem('access_token', tokens.access_token)
+    if (tokens.refresh_token) localStorage.setItem('refresh_token', tokens.refresh_token)
+    const me = await apiMe()
+    setUser(me)
   }
 
   const logout = () => {

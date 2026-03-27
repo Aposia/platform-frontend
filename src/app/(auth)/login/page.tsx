@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth-context'
@@ -13,35 +13,46 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  // Restore saved theme
+  useEffect(() => {
+    const saved = localStorage.getItem('theme')
+    if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark')
+  }, [])
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
     setLoading(true)
     try {
       await login(email, password)
-      router.push('/dashboard')
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      setError(msg || 'Nieprawidłowy email lub hasło')
+      setError(msg || 'Nieprawidłowy email lub hasło. Sprawdź dane lub zresetuj hasło.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4"
-         style={{ background: 'radial-gradient(ellipse 80% 60% at 50% -20%, rgba(255,107,53,0.15) 0%, transparent 60%), #0d0f1c' }}>
+    <div className="min-h-screen flex items-center justify-center px-4 transition-colors duration-300"
+         style={{ background: 'var(--bg)' }}>
       <div className="w-full max-w-sm">
 
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-medium tracking-tight">MNIEJ ROBOTY</h1>
-          <p className="text-white/40 text-sm mt-1">Zaloguj się do swojego konta</p>
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4 text-white font-bold text-xl"
+               style={{ background: 'linear-gradient(135deg, var(--orange), #1B2A4A)' }}>
+            M
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--text)', fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' }}>
+            Mniej Roboty
+          </h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>Zaloguj się do swojego konta</p>
         </div>
 
         {/* Card */}
-        <div className="glass-card p-8">
-          <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="glass-card p-7">
+          <form onSubmit={handleSubmit} className="space-y-4">
 
             <div>
               <label className="label">Email</label>
@@ -49,7 +60,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="input-glass"
+                className="input-field"
                 placeholder="twoj@email.pl"
                 required
                 autoComplete="email"
@@ -59,7 +70,8 @@ export default function LoginPage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="label mb-0">Hasło</label>
-                <Link href="/reset-password" className="text-xs text-white/30 hover:text-white/60 transition-colors">
+                <Link href="/reset-password" className="text-xs font-medium transition-colors"
+                      style={{ color: 'var(--muted)' }}>
                   Nie pamiętam hasła
                 </Link>
               </div>
@@ -67,7 +79,7 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="input-glass"
+                className="input-field"
                 placeholder="••••••••"
                 required
                 autoComplete="current-password"
@@ -75,7 +87,8 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="text-red-alert text-sm bg-red-alert/10 border border-red-alert/20 rounded-xl px-4 py-3">
+              <div className="text-sm px-4 py-3 rounded-xl"
+                   style={{ color: 'var(--red)', background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)' }}>
                 {error}
               </div>
             )}
@@ -86,12 +99,13 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p className="text-center text-white/30 text-sm mt-6">
+        <p className="text-center text-sm mt-5" style={{ color: 'var(--muted)' }}>
           Nie masz konta?{' '}
-          <Link href="/register" className="text-orange hover:text-orange/80 transition-colors">
+          <Link href="/register" className="font-semibold transition-colors" style={{ color: 'var(--orange)' }}>
             Zarejestruj się
           </Link>
         </p>
+
       </div>
     </div>
   )

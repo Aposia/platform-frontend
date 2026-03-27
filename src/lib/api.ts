@@ -97,7 +97,7 @@ export async function apiMarkLessonComplete(lessonId: string) {
 // ── Checkout ──────────────────────────────────────────────────────────────────
 
 export async function apiCreateStripeSession(product_slug: string) {
-  const { data } = await api.post('/checkout/stripe/create-session', { product_slug })
+  const { data } = await api.post(`/checkout/stripe/create-session?product_slug=${encodeURIComponent(product_slug)}`)
   return data // { checkout_url, session_id }
 }
 

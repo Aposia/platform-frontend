@@ -25,7 +25,7 @@ const config: Config = {
         'brand-orange': '#F97316',
       },
       fontFamily: {
-        sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Segoe UI', 'sans-serif'],
+        sans: ['var(--font-dm-sans)', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         serif: ['Instrument Serif', 'Georgia', 'serif'],
         mono: ['SF Mono', 'Monaco', 'monospace'],
       },

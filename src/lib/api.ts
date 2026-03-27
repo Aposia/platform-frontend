@@ -67,6 +67,11 @@ export async function apiConfirmPasswordReset(token: string, new_password: strin
   return data
 }
 
+export async function apiUpdateMe(payload: { full_name?: string; current_password?: string; new_password?: string }) {
+  const { data } = await api.patch('/auth/me', payload)
+  return data
+}
+
 // ── Courses ───────────────────────────────────────────────────────────────────
 
 export async function apiMyCourses() {

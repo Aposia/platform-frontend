@@ -34,9 +34,9 @@ interface CourseData {
 }
 
 function LessonIcon({ type }: { type: string }) {
-  if (type === 'video') return <span className="text-xs text-blue">▶</span>
-  if (type === 'pdf') return <span className="text-xs text-yellow">PDF</span>
-  return <span className="text-xs text-white/40">T</span>
+  if (type === 'video') return <span style={{ fontSize: 11, color: 'var(--orange)', fontWeight: 700 }}>▶</span>
+  if (type === 'pdf') return <span style={{ fontSize: 10, color: 'var(--orange)', fontWeight: 700 }}>PDF</span>
+  return <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>T</span>
 }
 
 function BunnyPlayer({ url }: { url: string }) {
@@ -44,9 +44,67 @@ function BunnyPlayer({ url }: { url: string }) {
     <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
       <iframe
         src={url}
-        className="absolute inset-0 w-full h-full rounded-xl"
+        className="absolute inset-0 w-full h-full rounded-2xl"
         allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
         allowFullScreen
+      />
+    </div>
+  )
+}
+
+function NotesPanel({ lessonId }: { lessonId: string }) {
+  const key = `notes_${lessonId}`
+  const [text, setText] = useState(() =>
+    typeof window !== 'undefined' ? (localStorage.getItem(key) ?? '') : ''
+  )
+  const [saved, setSaved] = useState(false)
+
+  const save = () => {
+    localStorage.setItem(key, text)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 1500)
+  }
+
+  return (
+    <div className="card" style={{ padding: '20px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--heading)' }}>📝 Notatki do tej lekcji</span>
+        <button
+          onClick={save}
+          style={{
+            fontSize: 12,
+            padding: '4px 14px',
+            borderRadius: 8,
+            border: 'none',
+            background: saved ? '#22c55e' : 'var(--orange)',
+            color: '#fff',
+            cursor: 'pointer',
+            fontWeight: 600,
+            transition: 'background 0.2s'
+          }}
+        >
+          {saved ? 'Zapisano ✓' : 'Zapisz'}
+        </button>
+      </div>
+      <textarea
+        value={text}
+        onChange={e => setText(e.target.value)}
+        placeholder="Zapisz co ważne, swoje przemyślenia lub pomysły na wdrożenie..."
+        style={{
+          width: '100%',
+          minHeight: 120,
+          resize: 'vertical',
+          border: '1.5px solid var(--border)',
+          borderRadius: 12,
+          padding: '12px 14px',
+          fontSize: 14,
+          lineHeight: 1.6,
+          color: 'var(--text)',
+          background: 'var(--bg)',
+          outline: 'none',
+          fontFamily: 'inherit',
+          boxSizing: 'border-box',
+        }}
       />
     </div>
   )
@@ -87,8 +145,8 @@ export default function LearnPage() {
   if (isLoading) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-orange border-t-transparent rounded-full animate-spin" />
+        <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
+          <div style={{ width: 32, height: 32, border: '2.5px solid var(--orange)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
         </div>
       </ProtectedRoute>
     )
@@ -96,55 +154,90 @@ export default function LearnPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen flex flex-col" style={{ background: '#0d0f1c' }}>
+      <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg)' }}>
 
         {/* Top nav */}
-        <header className="flex-shrink-0 border-b border-white/[0.06] px-4 py-3 flex items-center gap-4"
-                style={{ background: 'rgba(13,15,28,0.9)', backdropFilter: 'blur(20px)' }}>
-          <Link href="/dashboard" className="text-white/40 hover:text-white/70 transition-colors text-sm">
+        <header style={{
+          flexShrink: 0,
+          borderBottom: '1.5px solid var(--border)',
+          padding: '12px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 16,
+          background: 'var(--card)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+        }}>
+          <Link href="/dashboard" style={{ color: 'var(--text-muted)', fontSize: 14, textDecoration: 'none', fontWeight: 500 }}>
             ← Dashboard
           </Link>
-          <span className="text-white/20 text-sm">|</span>
-          <h1 className="text-sm font-medium truncate flex-1">{course?.title}</h1>
+          <span style={{ color: 'var(--border)', fontSize: 14 }}>|</span>
+          <h1 style={{ fontSize: 14, fontWeight: 600, color: 'var(--heading)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {course?.title}
+          </h1>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-white/40 hover:text-white/70 text-sm transition-colors ml-auto"
+            style={{ fontSize: 13, color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', marginLeft: 'auto' }}
           >
             {sidebarOpen ? 'Ukryj spis' : 'Pokaż spis'}
           </button>
         </header>
 
         {/* Body */}
-        <div className="flex flex-1 overflow-hidden">
+        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
 
           {/* Sidebar */}
           {sidebarOpen && (
-            <aside className="w-72 flex-shrink-0 border-r border-white/[0.06] overflow-y-auto"
-                   style={{ background: 'rgba(13,15,28,0.6)' }}>
-              <div className="p-4 space-y-6">
+            <aside style={{
+              width: 272,
+              flexShrink: 0,
+              borderRight: '1.5px solid var(--border)',
+              overflowY: 'auto',
+              background: 'var(--card)',
+            }}>
+              <div style={{ padding: 16 }}>
                 {course?.modules.map((mod) => (
-                  <div key={mod.id}>
-                    <h3 className="text-xs font-medium text-white/30 uppercase tracking-widest mb-3 px-2">
+                  <div key={mod.id} style={{ marginBottom: 24 }}>
+                    <h3 style={{
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: 'var(--text-muted)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em',
+                      marginBottom: 10,
+                      paddingLeft: 8,
+                    }}>
                       {mod.title}
                     </h3>
-                    <div className="space-y-1">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                       {mod.lessons.map((lesson) => {
                         const isActive = lesson.id === currentLesson?.id
                         return (
                           <button
                             key={lesson.id}
                             onClick={() => setActiveLesson(lesson)}
-                            className={cn(
-                              'w-full text-left px-3 py-2.5 rounded-xl flex items-center gap-3 transition-all text-sm',
-                              isActive
-                                ? 'bg-orange/15 text-white'
-                                : 'text-white/50 hover:text-white/80 hover:bg-white/[0.05]'
-                            )}
+                            style={{
+                              width: '100%',
+                              textAlign: 'left',
+                              padding: '9px 12px',
+                              borderRadius: 10,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 10,
+                              fontSize: 13,
+                              fontWeight: isActive ? 600 : 400,
+                              background: isActive ? 'rgba(255,107,0,0.1)' : 'transparent',
+                              color: isActive ? 'var(--orange)' : 'var(--text)',
+                              border: 'none',
+                              cursor: 'pointer',
+                              transition: 'all 0.15s',
+                            }}
                           >
                             <LessonIcon type={lesson.type} />
-                            <span className="flex-1 leading-snug">{lesson.title}</span>
+                            <span style={{ flex: 1, lineHeight: 1.4 }}>{lesson.title}</span>
                             {lesson.duration_secs && (
-                              <span className="text-xs text-white/25 flex-shrink-0">
+                              <span style={{ fontSize: 11, color: 'var(--text-muted)', flexShrink: 0 }}>
                                 {formatDuration(lesson.duration_secs)}
                               </span>
                             )}
@@ -159,15 +252,17 @@ export default function LearnPage() {
           )}
 
           {/* Main content */}
-          <main className="flex-1 overflow-y-auto">
+          <main style={{ flex: 1, overflowY: 'auto' }}>
             {currentLesson ? (
-              <div className="max-w-3xl mx-auto px-6 py-8 space-y-6">
+              <div style={{ maxWidth: 760, margin: '0 auto', padding: '32px 24px', display: 'flex', flexDirection: 'column', gap: 24 }}>
 
                 {/* Lesson header */}
                 <div>
-                  <h2 className="text-xl font-medium mb-1">{currentLesson.title}</h2>
+                  <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--heading)', marginBottom: 4, fontFamily: 'var(--serif)' }}>
+                    {currentLesson.title}
+                  </h2>
                   {currentLesson.duration_secs && (
-                    <p className="text-white/40 text-sm">
+                    <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>
                       {formatDuration(currentLesson.duration_secs)} min
                     </p>
                   )}
@@ -177,25 +272,25 @@ export default function LearnPage() {
                 {currentLesson.type === 'video' && currentLesson.bunny_embed_url ? (
                   <BunnyPlayer url={currentLesson.bunny_embed_url} />
                 ) : currentLesson.type === 'pdf' && currentLesson.content_url ? (
-                  <div className="glass-card p-6 text-center">
-                    <p className="text-white/60 mb-4">Pobierz materiał PDF</p>
-                    <a href={currentLesson.content_url} target="_blank" rel="noreferrer"
-                       className="btn-primary inline-block">
+                  <div className="card" style={{ padding: 24, textAlign: 'center' }}>
+                    <p style={{ color: 'var(--text-muted)', marginBottom: 16 }}>Pobierz materiał PDF</p>
+                    <a href={currentLesson.content_url} target="_blank" rel="noreferrer" className="btn-primary">
                       Otwórz PDF →
                     </a>
                   </div>
                 ) : (
-                  <div className="glass-card p-6 text-center text-white/40">
+                  <div className="card" style={{ padding: 24, textAlign: 'center', color: 'var(--text-muted)' }}>
                     Materiał wideo zostanie wkrótce dodany.
                   </div>
                 )}
 
                 {/* Navigation + complete */}
-                <div className="flex items-center gap-3 pt-2">
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                   <button
                     disabled={!prevLesson}
                     onClick={() => prevLesson && setActiveLesson(prevLesson)}
-                    className="btn-secondary text-sm py-2.5 disabled:opacity-30"
+                    className="btn-secondary"
+                    style={{ fontSize: 13, padding: '10px 16px', opacity: prevLesson ? 1 : 0.3 }}
                   >
                     ← Poprzednia
                   </button>
@@ -203,7 +298,8 @@ export default function LearnPage() {
                   <button
                     onClick={handleComplete}
                     disabled={completeMutation.isPending}
-                    className="btn-primary text-sm py-2.5 flex-1 text-center"
+                    className="btn-primary"
+                    style={{ fontSize: 13, padding: '10px 20px', flex: 1, textAlign: 'center' }}
                   >
                     {completeMutation.isPending
                       ? 'Zapisuję...'
@@ -215,27 +311,42 @@ export default function LearnPage() {
                   <button
                     disabled={!nextLesson}
                     onClick={() => nextLesson && setActiveLesson(nextLesson)}
-                    className="btn-secondary text-sm py-2.5 disabled:opacity-30"
+                    className="btn-secondary"
+                    style={{ fontSize: 13, padding: '10px 16px', opacity: nextLesson ? 1 : 0.3 }}
                   >
                     Następna →
                   </button>
                 </div>
 
+                {/* Notes */}
+                <NotesPanel lessonId={currentLesson.id} />
+
                 {/* Completion celebration */}
                 {completeMutation.isSuccess && !nextLesson && (
-                  <div className="glass-card p-6 text-center border-green/20 bg-green/[0.04]">
-                    <div className="text-3xl mb-3">🎉</div>
-                    <h3 className="font-medium mb-2">Kurs ukończony!</h3>
-                    <p className="text-white/40 text-sm mb-4">Certyfikat zostanie wysłany na Twój email.</p>
-                    <Link href="/dashboard" className="btn-primary inline-block text-sm">
-                      Wróć do dashboardu →
-                    </Link>
+                  <div className="card" style={{ padding: 32, textAlign: 'center', borderColor: '#22c55e', background: 'rgba(34,197,94,0.04)' }}>
+                    <div style={{ fontSize: 40, marginBottom: 12 }}>🎉</div>
+                    <h3 style={{ fontWeight: 700, marginBottom: 8, color: 'var(--heading)', fontFamily: 'var(--serif)' }}>Kurs ukończony!</h3>
+                    <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 20 }}>Brawo! Masz teraz certyfikat ukończenia.</p>
+                    <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+                      <a
+                        href={`${process.env.NEXT_PUBLIC_API_URL}/api/v1/certificates/${slug}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn-primary"
+                        style={{ display: 'inline-block', fontSize: 14 }}
+                      >
+                        🏆 Pobierz certyfikat →
+                      </a>
+                      <Link href="/dashboard" className="btn-secondary" style={{ display: 'inline-block', fontSize: 14 }}>
+                        Dashboard
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full">
-                <p className="text-white/30">Wybierz lekcję z listy</p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                <p style={{ color: 'var(--text-muted)' }}>Wybierz lekcję z listy</p>
               </div>
             )}
           </main>

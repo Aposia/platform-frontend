@@ -12,8 +12,9 @@ const PRODUCT_PRICES: Record<string, number> = {
   'biblioteka-tel': 29,
   'modelka-ai': 149,
   'ai-creator-studio': 399,
-  'oto-mniej-roboty': 39,
-  'mniej-roboty-core': 297,
+  'oto_mniej_roboty': 39,
+  'oto-starter-mr': 57,
+  'core-mr': 297,
 }
 
 function SuccessContent() {

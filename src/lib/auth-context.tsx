@@ -56,6 +56,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (tokens.refresh_token) localStorage.setItem('refresh_token', tokens.refresh_token)
     const me = await apiMe()
     setUser(me)
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'CompleteRegistration', { status: 'success' })
+    }
   }
 
   const logout = () => {

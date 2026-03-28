@@ -6,6 +6,16 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 
+const PRODUCT_PRICES: Record<string, number> = {
+  'ai-avatar-starter-pack': 39,
+  '36-promptow-extra': 19,
+  'biblioteka-tel': 29,
+  'modelka-ai': 149,
+  'ai-creator-studio': 399,
+  'oto-mniej-roboty': 39,
+  'mniej-roboty-core': 297,
+}
+
 function SuccessContent() {
   const queryClient = useQueryClient()
   const searchParams = useSearchParams()
@@ -14,6 +24,17 @@ function SuccessContent() {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
+    // Meta Pixel — Purchase event
+    if (slug && typeof window !== 'undefined' && (window as any).fbq) {
+      const value = PRODUCT_PRICES[slug] ?? 0
+      ;(window as any).fbq('track', 'Purchase', {
+        value,
+        currency: 'PLN',
+        content_ids: [slug],
+        content_type: 'product',
+        content_name: slug,
+      })
+    }
     // Odśwież listę kursów po zakupie (webhook może chwilę zająć)
     const timer = setTimeout(() => {
       queryClient.invalidateQueries({ queryKey: ['my-courses'] })
@@ -21,7 +42,7 @@ function SuccessContent() {
     // Animacja wejścia
     const t2 = setTimeout(() => setShow(true), 80)
     return () => { clearTimeout(timer); clearTimeout(t2) }
-  }, [queryClient])
+  }, [queryClient, slug])
 
   // Upsell — jeśli kupiono OTO / mniejszy produkt, pokaż ACS
   const showUpsell = slug && !['ai-creator-studio'].includes(slug)

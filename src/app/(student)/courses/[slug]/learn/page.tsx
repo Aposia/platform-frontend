@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
@@ -17,6 +17,7 @@ interface Lesson {
   is_free_preview: boolean
   bunny_embed_url: string | null
   content_url: string | null
+  content_html: string | null
 }
 
 interface Module {
@@ -37,6 +38,27 @@ function LessonIcon({ type }: { type: string }) {
   if (type === 'video') return <span style={{ fontSize: 11, color: 'var(--orange)', fontWeight: 700 }}>▶</span>
   if (type === 'pdf') return <span style={{ fontSize: 10, color: 'var(--orange)', fontWeight: 700 }}>PDF</span>
   return <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>T</span>
+}
+
+function HtmlLesson({ html }: { html: string }) {
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+
+  const handleLoad = () => {
+    const iframe = iframeRef.current
+    if (iframe?.contentDocument?.body) {
+      iframe.style.height = iframe.contentDocument.body.scrollHeight + 'px'
+    }
+  }
+
+  return (
+    <iframe
+      ref={iframeRef}
+      srcDoc={html}
+      onLoad={handleLoad}
+      style={{ width: '100%', border: 'none', borderRadius: 16, minHeight: 400, display: 'block' }}
+      title="Treść lekcji"
+    />
+  )
 }
 
 function BunnyPlayer({ url }: { url: string }) {
@@ -278,9 +300,11 @@ export default function LearnPage() {
                       Otwórz PDF →
                     </a>
                   </div>
+                ) : currentLesson.content_html ? (
+                  <HtmlLesson html={currentLesson.content_html} />
                 ) : (
                   <div className="card" style={{ padding: 24, textAlign: 'center', color: 'var(--text-muted)' }}>
-                    Materiał wideo zostanie wkrótce dodany.
+                    Materiał zostanie wkrótce dodany.
                   </div>
                 )}
 

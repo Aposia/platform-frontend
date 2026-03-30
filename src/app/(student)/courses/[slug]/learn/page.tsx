@@ -45,8 +45,13 @@ function HtmlLesson({ html }: { html: string }) {
 
   const handleLoad = () => {
     const iframe = iframeRef.current
-    if (iframe?.contentDocument?.body) {
-      iframe.style.height = iframe.contentDocument.body.scrollHeight + 'px'
+    try {
+      const body = iframe?.contentDocument?.body || iframe?.contentWindow?.document?.body
+      if (body) {
+        iframe!.style.height = (body.scrollHeight + 32) + 'px'
+      }
+    } catch {
+      // cross-origin guard
     }
   }
 
@@ -55,7 +60,8 @@ function HtmlLesson({ html }: { html: string }) {
       ref={iframeRef}
       srcDoc={html}
       onLoad={handleLoad}
-      style={{ width: '100%', border: 'none', borderRadius: 16, minHeight: 400, display: 'block' }}
+      sandbox="allow-scripts allow-same-origin"
+      style={{ width: '100%', border: 'none', borderRadius: 16, minHeight: 500, display: 'block' }}
       title="Treść lekcji"
     />
   )

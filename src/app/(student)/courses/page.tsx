@@ -39,6 +39,12 @@ function visualProgress(real: number): number {
   return Math.max(real, 12)
 }
 
+// Produkty z bezpośrednim linkiem do materiału HTML
+const MATERIAL_LINKS: Record<string, string> = {
+  'oto_mniej_roboty': 'https://www.mniejroboty.pl/oto-material',
+  'ai-avatar-starter-pack': 'https://www.mniejroboty.pl/oto-material',
+}
+
 export default function CoursesPage() {
   const { user } = useAuth()
 
@@ -125,7 +131,11 @@ export default function CoursesPage() {
                       )}
 
                       <div className="flex gap-2">
-                        {course.has_course ? (
+                        {MATERIAL_LINKS[course.slug] ? (
+                          <a href={MATERIAL_LINKS[course.slug]} target="_blank" rel="noreferrer" className="btn-primary flex-1 text-center text-sm py-2.5">
+                            Otwórz materiał →
+                          </a>
+                        ) : course.has_course ? (
                           <Link href={`/courses/${course.slug}/learn`} className="btn-primary flex-1 text-center text-sm py-2.5">
                             {isNew ? 'Zacznij →' : isDone ? 'Powtórz' : 'Kontynuuj →'}
                           </Link>

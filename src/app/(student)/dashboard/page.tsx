@@ -40,45 +40,39 @@ function getGreeting(name: string): { heading: string; sub: string } {
   return { heading: `Hej, ${firstName} 🌙`, sub: 'Późno, ale jesteśmy.' }
 }
 
+// Produkty z bezpośrednim linkiem do materiału HTML (nie panel kursu)
+const MATERIAL_LINKS: Record<string, string> = {
+  'oto_mniej_roboty': 'https://www.mniejroboty.pl/oto-material',
+  'ai-avatar-starter-pack': 'https://www.mniejroboty.pl/oto-material',
+}
+
 function CourseCard({ course }: { course: CourseAccess }) {
-  const { progress } = course
-  const isNew = progress.completed_lessons === 0
-  const isDone = progress.percent === 100
-  const bar = visualProgress(progress.percent)
+  const directLink = MATERIAL_LINKS[course.slug]
 
   return (
-    <div className="glass-card p-5 flex flex-col gap-4 cursor-pointer">
+    <div className="glass-card p-5 flex flex-col gap-4">
       <div className="flex items-start gap-3">
         <div className={cn(
           'w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0',
           'bg-[rgba(var(--orange-rgb),0.1)]'
         )}>
-          {isDone ? '✅' : isNew ? '🆕' : '▶️'}
+          🆕
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-sm leading-tight mb-0.5" style={{ color: 'var(--text)' }}>
             {course.name}
           </h3>
-          <p className="text-xs" style={{ color: 'var(--muted)' }}>
-            {progress.completed_lessons} / {progress.total_lessons} lekcji
-          </p>
         </div>
-        {isDone && <span className="badge badge-green flex-shrink-0">Ukończony</span>}
-        {isNew && !isDone && <span className="badge badge-orange flex-shrink-0">Nowy</span>}
+        <span className="badge badge-orange flex-shrink-0">Nowy</span>
       </div>
 
-      {progress.total_lessons > 0 && (
-        <div>
-          <div className="progress-track">
-            <div className={cn('progress-fill', isDone && 'done')} style={{ width: `${bar}%` }} />
-          </div>
-          <p className="text-xs mt-1.5" style={{ color: 'var(--muted)' }}>{progress.percent}% ukończone</p>
-        </div>
-      )}
-
-      {course.has_course ? (
+      {directLink ? (
+        <a href={directLink} target="_blank" rel="noreferrer" className="btn-primary text-center text-sm py-2.5">
+          Otwórz materiał →
+        </a>
+      ) : course.has_course ? (
         <Link href={`/courses/${course.slug}/learn`} className="btn-primary text-center text-sm py-2.5">
-          {isNew ? 'Zacznij kurs →' : isDone ? 'Powtórz kurs' : 'Kontynuuj →'}
+          Zacznij kurs →
         </Link>
       ) : (
         <div className="text-sm text-center py-2.5 rounded-xl border" style={{ color: 'var(--muted)', borderColor: 'var(--border)' }}>

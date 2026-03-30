@@ -132,7 +132,7 @@ export default function CoursesPage() {
                         ) : (
                           <div className="flex-1 text-sm text-center py-2.5 rounded-xl border"
                                style={{ color: 'var(--muted)', borderColor: 'var(--border)' }}>
-                            Materiały dostępne — skontaktuj się
+                            Materiał w przygotowaniu
                           </div>
                         )}
                         {isDone && (

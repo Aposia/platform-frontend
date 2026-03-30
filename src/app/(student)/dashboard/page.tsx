@@ -82,7 +82,7 @@ function CourseCard({ course }: { course: CourseAccess }) {
         </Link>
       ) : (
         <div className="text-sm text-center py-2.5 rounded-xl border" style={{ color: 'var(--muted)', borderColor: 'var(--border)' }}>
-          Materiały dostępne — skontaktuj się
+          Materiał w przygotowaniu
         </div>
       )}
     </div>
@@ -225,8 +225,8 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          {/* Two column */}
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.4fr_1fr]">
+          {/* Kursy */}
+          <div className="grid grid-cols-1 gap-5">
 
             {/* LEFT — Kursy */}
             <div>
@@ -268,64 +268,7 @@ export default function DashboardPage() {
             {/* RIGHT — Upsell + Odkryj */}
             <div className="flex flex-col gap-4">
 
-              {/* Upsell card */}
-              {!isLoading && courses?.length < 3 && (
-                <div className="glass-card p-5 relative overflow-hidden" style={{ borderColor: 'rgba(var(--orange-rgb),0.25)' }}>
-                  <div className="absolute top-0 left-0 right-0 h-0.5"
-                       style={{ background: 'linear-gradient(90deg, var(--orange), var(--violet))' }} />
-                  <div className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--orange)' }}>
-                    🎯 Specjalnie dla Ciebie
-                  </div>
-                  <h3 className="font-bold text-sm mb-1.5 leading-snug" style={{ color: 'var(--text)' }}>
-                    Asystent Decyzji i Strategii
-                  </h3>
-                  <p className="text-xs mb-3 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                    Gotowy system do przegadania każdej decyzji biznesowej z AI. Efekt w 30 min.
-                  </p>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-2xl font-bold" style={{ color: 'var(--orange)' }}>39 PLN</span>
-                    <span className="text-sm line-through" style={{ color: 'var(--muted)' }}>67 PLN</span>
-                    <span className="badge badge-orange">−42%</span>
-                  </div>
-                  <Link href="/checkout/oto-mniej-roboty" className="btn-primary block text-center text-sm py-2.5">
-                    Odbierz ofertę →
-                  </Link>
-                </div>
-              )}
-
-              {/* Discover */}
-              <div className="glass-card p-5">
-                <h2 className="text-xs font-bold uppercase tracking-wider mb-4" style={{ color: 'var(--text)' }}>
-                  Może Cię zainteresować
-                </h2>
-                <div className="flex flex-col gap-0">
-                  {[
-                    { icon: '🤖', title: 'AI Avatar Starter Pack', sub: 'Awatar AI w 30 minut · 39 PLN', href: '/checkout/ai-avatar-starter-pack' },
-                    { icon: '📸', title: 'Twoja Modelka AI', sub: 'Zdjęcia reklamowe w 60 min · 149 PLN', href: '/checkout/modelka-ai' },
-                    { icon: '✍️', title: '36 Promptów Extra', sub: 'Gotowe prompty do kopiowania · 19 PLN', href: '/checkout/36-promptow-extra' },
-                    { icon: '🖼️', title: 'Biblioteka TEL', sub: 'Gotowe tła do zdjęć · 29 PLN', href: '/checkout/biblioteka-tel' },
-                    { icon: '🚀', title: 'AI Creator Studio 2.0', sub: 'Pełny system brand · 399 PLN', href: '/checkout/ai-creator-studio' },
-                  ].map((item, i) => (
-                    <Link key={i} href={item.href}
-                      className="flex items-center gap-3 py-3 transition-colors group"
-                      style={{ borderBottom: i < 4 ? '1px solid var(--border)' : 'none' }}
-                    >
-                      <div className="w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0"
-                           style={{ background: 'var(--bg-2)' }}>
-                        {item.icon}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-semibold transition-colors group-hover:text-[var(--orange)]"
-                             style={{ color: 'var(--text)' }}>
-                          {item.title}
-                        </div>
-                        <div className="text-xs" style={{ color: 'var(--muted)' }}>{item.sub}</div>
-                      </div>
-                      <span className="text-base" style={{ color: 'var(--muted)' }}>›</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
+              {/* Upsell i odkrywanie — wyłączone, do dopracowania */}
 
             </div>
           </div>

@@ -201,6 +201,30 @@ export default function DashboardPage() {
             <StatCard icon="⏱️" label="Czas nauki" value={totalMinutes >= 60 ? `${Math.floor(totalMinutes/60)}h ${totalMinutes%60}m` : `${totalMinutes}m`} sub="łącznie" />
           </div>
 
+          {/* AI Creator Studio CTA */}
+          <div className="glass-card p-5 mb-7 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+               style={{ borderColor: 'rgba(var(--orange-rgb),0.3)', background: 'rgba(var(--orange-rgb),0.04)' }}>
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
+                 style={{ background: 'rgba(var(--orange-rgb),0.12)' }}>
+              ✨
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-bold uppercase tracking-wider mb-0.5" style={{ color: 'var(--orange)' }}>
+                AI Creator Studio
+              </div>
+              <p className="text-sm font-semibold mb-0.5" style={{ color: 'var(--text)' }}>
+                Zaprojektuj swojego awatara AI
+              </p>
+              <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                Opisz postać → platforma generuje portret + 10 zdjęć w 5 scenach. Bez narzędzi, bez konta.
+              </p>
+            </div>
+            <Link href="/studio"
+              className="btn-primary flex-shrink-0 text-sm py-2.5 px-5 whitespace-nowrap">
+              Otwórz Studio →
+            </Link>
+          </div>
+
           {/* Two column */}
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.4fr_1fr]">
 

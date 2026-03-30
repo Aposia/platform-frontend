@@ -101,4 +101,38 @@ export async function apiCreateStripeSession(product_slug: string) {
   return data // { checkout_url, session_id }
 }
 
+// ── Studio / AI Creator ───────────────────────────────────────────────────────
+
+export async function apiStudioBalance() {
+  const { data } = await api.get('/studio/credits/balance')
+  return data  // { balance, subscription }
+}
+
+export async function apiStudioGallery() {
+  const { data } = await api.get('/studio/gallery')
+  return data  // Avatar[]
+}
+
+export interface WizardRequest {
+  description: string
+  archetype: string
+  avatar_name: string
+  business_context?: string
+}
+
+export async function apiStartWizard(req: WizardRequest) {
+  const { data } = await api.post('/studio/wizard', req)
+  return data  // { wizard_id, status, progress, message }
+}
+
+export async function apiWizardStatus(wizardId: string) {
+  const { data } = await api.get(`/studio/wizard/${wizardId}/status`)
+  return data  // { wizard_id, status, progress, message }
+}
+
+export async function apiWizardResult(wizardId: string) {
+  const { data } = await api.get(`/studio/wizard/${wizardId}/result`)
+  return data  // { wizard_id, avatar_id, portrait_b64, photos, archetype_tip }
+}
+
 export default api

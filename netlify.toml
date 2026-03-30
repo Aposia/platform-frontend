@@ -8,3 +8,30 @@ publish = ".next"
 [build.environment]
 NODE_VERSION = "20"
 NEXT_PUBLIC_API_URL = "https://platform-backend-production-d567.up.railway.app"
+
+# Strip trailing NBSP (%C2%A0) — mobile copy-paste adds invisible char
+[[redirects]]
+from = "/*%C2%A0"
+to = "/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "/*%c2%a0"
+to = "/:splat"
+status = 301
+force = true
+
+# Strip trailing regular space
+[[redirects]]
+from = "/*%20"
+to = "/:splat"
+status = 301
+force = true
+
+# Catch-all: route all non-static requests to Next.js server function
+[[redirects]]
+from = "/*"
+to = "/.netlify/functions/___netlify-server-handler"
+status = 200
+force = false

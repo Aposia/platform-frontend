@@ -40,10 +40,8 @@ function getGreeting(name: string): { heading: string; sub: string } {
   return { heading: `Hej, ${firstName} 🌙`, sub: 'Późno, ale jesteśmy.' }
 }
 
-// Produkty z bezpośrednim linkiem do materiału HTML (nie panel kursu)
+// Produkty z bezpośrednim linkiem do materiału HTML (puste = kurs na platformie)
 const MATERIAL_LINKS: Record<string, string> = {
-  'oto_mniej_roboty': 'https://www.mniejroboty.pl/oto-material',
-  'ai-avatar-starter-pack': 'https://www.mniejroboty.pl/oto-material',
 }
 
 function CourseCard({ course }: { course: CourseAccess }) {
@@ -167,6 +165,14 @@ export default function DashboardPage() {
               >
                 {(user?.full_name?.[0] || user?.email?.[0] || 'K').toUpperCase()}
               </Link>
+              {user?.is_admin && (
+                <Link href="/zarzadzanie"
+                  className="text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
+                  style={{ color: '#FF6B35', background: 'rgba(255,107,53,.1)', border: '1px solid rgba(255,107,53,.3)' }}
+                >
+                  Admin
+                </Link>
+              )}
               <button onClick={logout}
                 className="text-xs font-medium px-3 py-1.5 rounded-lg transition-all"
                 style={{ color: 'var(--muted)', background: 'var(--surface-2)', border: '1px solid var(--border)' }}

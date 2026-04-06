@@ -39,10 +39,9 @@ function visualProgress(real: number): number {
   return Math.max(real, 12)
 }
 
-// Produkty z bezpośrednim linkiem do materiału HTML
+// Produkty z bezpośrednim linkiem do materiału HTML (puste = kurs na platformie)
 const MATERIAL_LINKS: Record<string, string> = {
-  'oto_mniej_roboty': 'https://www.mniejroboty.pl/oto-material',
-  'ai-avatar-starter-pack': 'https://www.mniejroboty.pl/oto-material',
+  'ai-avatar-starter-pack': 'https://start.mniejroboty.pl/starterpack',
 }
 
 export default function CoursesPage() {

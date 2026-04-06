@@ -42,7 +42,7 @@ function getGreeting(name: string): { heading: string; sub: string } {
 
 // Produkty z bezpośrednim linkiem do materiału HTML (puste = kurs na platformie)
 const MATERIAL_LINKS: Record<string, string> = {
-  'ai-avatar-starter-pack': 'https://start.mniejroboty.pl/starterpack',
+  'ai-avatar-starter-pack': 'https://mniejroboty.pl/avatarstarterpack',
 }
 
 function CourseCard({ course }: { course: CourseAccess }) {

@@ -41,7 +41,7 @@ function visualProgress(real: number): number {
 
 // Produkty z bezpośrednim linkiem do materiału HTML (puste = kurs na platformie)
 const MATERIAL_LINKS: Record<string, string> = {
-  'ai-avatar-starter-pack': 'https://start.mniejroboty.pl/starterpack',
+  'ai-avatar-starter-pack': 'https://mniejroboty.pl/avatarstarterpack',
 }
 
 export default function CoursesPage() {

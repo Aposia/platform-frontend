@@ -204,12 +204,34 @@ export async function apiAdminAddModule(course_id: string, title: string) {
   return data
 }
 
-export async function apiAdminAddLesson(module_id: string, title: string, type: string, bunny_video_id?: string, duration_secs?: number) {
-  let url = `/admin/modules/${module_id}/lessons?title=${encodeURIComponent(title)}&type=${type}`
-  if (bunny_video_id) url += `&bunny_video_id=${encodeURIComponent(bunny_video_id)}`
-  if (duration_secs) url += `&duration_secs=${duration_secs}`
+export async function apiAdminAddLesson(module_id: string, fields: {
+  title: string; type: string; bunny_video_id?: string; content_url?: string;
+  duration_secs?: number; description?: string; link_url?: string;
+}) {
+  let url = `/admin/modules/${module_id}/lessons?title=${encodeURIComponent(fields.title)}&type=${fields.type}`
+  if (fields.bunny_video_id) url += `&bunny_video_id=${encodeURIComponent(fields.bunny_video_id)}`
+  if (fields.content_url) url += `&content_url=${encodeURIComponent(fields.content_url)}`
+  if (fields.duration_secs) url += `&duration_secs=${fields.duration_secs}`
+  if (fields.description) url += `&description=${encodeURIComponent(fields.description)}`
+  if (fields.link_url) url += `&link_url=${encodeURIComponent(fields.link_url)}`
   const { data } = await api.post(url)
   return data
+}
+
+export async function apiAdminUpdateLesson(lesson_id: string, fields: {
+  title?: string; bunny_video_id?: string; content_url?: string;
+  duration_secs?: number; description?: string; link_url?: string;
+}) {
+  const { data } = await api.patch(`/admin/lessons/${lesson_id}`, fields)
+  return data
+}
+
+export async function apiAdminStudentProgress() {
+  const { data } = await api.get('/admin/student-progress')
+  return data as {
+    email: string; full_name: string | null;
+    courses: { product_name: string; product_slug: string; total_lessons: number; completed_lessons: number; percent: number; watch_minutes: number; last_activity: string | null }[]
+  }[]
 }
 
 export async function apiAdminDeleteModule(id: string) {

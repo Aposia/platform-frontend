@@ -46,7 +46,7 @@ function StudentsTab() {
   const [grantSlug, setGrantSlug] = useState('')
   const [grantMsg, setGrantMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const [bulkText, setBulkText] = useState('')
-  const [bulkResults, setBulkResults] = useState<{ email: string; slug: string; status: string; temp_password?: string; detail?: string }[]>([])
+  const [bulkResults, setBulkResults] = useState<{ email: string; slug: string; status: string; user_created?: boolean; temp_password?: string; detail?: string }[]>([])
   const [expanded, setExpanded] = useState<string | null>(null)
 
   const { data: students = [], isLoading } = useQuery({ queryKey: ['admin-students'], queryFn: apiAdminStudents })
